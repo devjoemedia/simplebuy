@@ -84,7 +84,7 @@ const Layout = (props: any) => {
             >
               <Box
                 component="img"
-                src="/images/4.jpg"
+                src="/images/bg.jpg"
                 width="100%"
                 height="100%"
               />
