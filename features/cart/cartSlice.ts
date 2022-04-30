@@ -33,6 +33,7 @@ export const cartSlice = createSlice({
 
       // console.log("Mongoose:", state.items);
 
+      state.items.push(action.payload);
       state.cartTotal = state.items.length;
     },
     removeFromCart: (state, action) => {
