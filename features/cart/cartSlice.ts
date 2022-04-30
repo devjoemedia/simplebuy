@@ -26,17 +26,17 @@ export const cartSlice = createSlice({
       // let arr = current(state).items;
 
       // if (arr.length == 0) state.items.push(action.payload);
-      // if (state.items.length == 0) state.items.push(action.payload);
-      // else {
-      //   let exist = false;
 
-      //   state.items.forEach((item) => {
-      //     if (item.id === action.payload.id) exist = true;
-      //   });
+      if (state.items.length == 0) state.items.push(action.payload);
+      else {
+        let exist = false;
 
-      //   if (!exist) state.items.push(action.payload);
-      // }
-      state.items.push(action.payload);
+        state.items.forEach((item) => {
+          if (item.id === action.payload.id) exist = true;
+        });
+
+        if (!exist) state.items.push(action.payload);
+      }
 
       state.cartCount = state.items.length;
       state.cartTotal = state.items.reduce((sum, item) => sum + item.price, 0);
