@@ -16,6 +16,9 @@ import { BiUserCircle, BiSearch } from "react-icons/bi";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { AiOutlineShoppingCart, AiOutlineClose } from "react-icons/ai";
 import Link from "next/link";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "app/store";
+import { removeFromCart } from "features/cart/cartSlice";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const pages = [
@@ -31,8 +34,13 @@ const pages = [
 ];
 
 const Navbar = () => {
+  const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
   const [openCart, setOpenCart] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch();
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -187,7 +195,7 @@ const Navbar = () => {
                     textAlign: "center",
                   }}
                 >
-                  2
+                  {cartTotal | 0}
                 </Typography>
               </Box>
               <Typography marginLeft={"10px"}>Cart</Typography>
@@ -276,215 +284,81 @@ const Navbar = () => {
                     alignItems: "left",
                   }}
                 >
-                  cart is empty (0)
+                  ({cartItems.length}) items in cart
                   {/* Cart Item Row */}
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      width="60px"
-                      height="60px"
-                      src="/images/p4.jpg"
-                    />
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Typography
-                        bgcolor="#004c46"
+                  {cartItems.length > 0 &&
+                    cartItems.map((item) => (
+                      <Box
                         sx={{
-                          padding: "4px 10px",
-                          opacity: "0.8",
-                          fontWeight: "bold",
-                          color: "#fff",
-                          fontSize: "12px",
-                          textAlign: "center",
-                          marginRight: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
                         }}
+                        key={item.id}
                       >
-                        -
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "12px",
-                          color: "#333",
-                        }}
-                      >
-                        1
-                      </Typography>
-                      <Typography
-                        bgcolor="#004c46"
-                        sx={{
-                          padding: "4px 10px",
-                          opacity: "0.8",
-                          fontWeight: "bold",
-                          color: "#fff",
-                          fontSize: "12px",
-                          textAlign: "center",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        +
-                      </Typography>
-                    </Box>
-                    <Typography
-                      sx={{
-                        fontSize: "12px",
-                        color: "#333",
-                      }}
-                    >
-                      $350.89
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontWeight: "bolder",
-                        cursor: "pointer",
-                      }}
-                      // onClick={}
-                    >
-                      <AiOutlineClose />
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      width="60px"
-                      height="60px"
-                      src="/images/p2.jpg"
-                    />
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Typography
-                        bgcolor="#004c46"
-                        sx={{
-                          padding: "4px 10px",
-                          opacity: "0.8",
-                          fontWeight: "bold",
-                          color: "#fff",
-                          fontSize: "12px",
-                          textAlign: "center",
-                          marginRight: "10px",
-                        }}
-                      >
-                        -
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "12px",
-                          color: "#333",
-                        }}
-                      >
-                        1
-                      </Typography>
-                      <Typography
-                        bgcolor="#004c46"
-                        sx={{
-                          padding: "4px 10px",
-                          opacity: "0.8",
-                          fontWeight: "bold",
-                          color: "#fff",
-                          fontSize: "12px",
-                          textAlign: "center",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        +
-                      </Typography>
-                    </Box>
-                    <Typography
-                      sx={{
-                        fontSize: "12px",
-                        color: "#333",
-                      }}
-                    >
-                      $350.89
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontWeight: "bolder",
-                        cursor: "pointer",
-                      }}
-                      // onClick={}
-                    >
-                      <AiOutlineClose />
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      width="60px"
-                      height="60px"
-                      src="/images/p1.jpg"
-                    />
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Typography
-                        bgcolor="#004c46"
-                        sx={{
-                          padding: "4px 10px",
-                          opacity: "0.8",
-                          fontWeight: "bold",
-                          color: "#fff",
-                          fontSize: "12px",
-                          textAlign: "center",
-                          marginRight: "10px",
-                        }}
-                      >
-                        -
-                      </Typography>
-                      <Typography
-                        sx={{
-                          fontSize: "12px",
-                          color: "#333",
-                        }}
-                      >
-                        1
-                      </Typography>
-                      <Typography
-                        bgcolor="#004c46"
-                        sx={{
-                          padding: "4px 10px",
-                          opacity: "0.8",
-                          fontWeight: "bold",
-                          color: "#fff",
-                          fontSize: "12px",
-                          textAlign: "center",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        +
-                      </Typography>
-                    </Box>
-                    <Typography
-                      sx={{
-                        fontSize: "12px",
-                        color: "#333",
-                      }}
-                    >
-                      $350.89
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontWeight: "bolder",
-                        cursor: "pointer",
-                      }}
-                      // onClick={}
-                    >
-                      <AiOutlineClose />
-                    </Typography>
-                  </Box>
+                        <Box
+                          component="img"
+                          width="60px"
+                          height="60px"
+                          src={"/images/" + item.imageUrl}
+                        />
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                          <Typography
+                            bgcolor="#004c46"
+                            sx={{
+                              padding: "4px 10px",
+                              opacity: "0.8",
+                              fontWeight: "bold",
+                              color: "#fff",
+                              fontSize: "12px",
+                              textAlign: "center",
+                              marginRight: "10px",
+                            }}
+                          >
+                            -
+                          </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: "12px",
+                              color: "#333",
+                            }}
+                          >
+                            1
+                          </Typography>
+                          <Typography
+                            bgcolor="#004c46"
+                            sx={{
+                              padding: "4px 10px",
+                              opacity: "0.8",
+                              fontWeight: "bold",
+                              color: "#fff",
+                              fontSize: "12px",
+                              textAlign: "center",
+                              marginLeft: "10px",
+                            }}
+                          >
+                            +
+                          </Typography>
+                        </Box>
+                        <Typography
+                          sx={{
+                            fontSize: "12px",
+                            color: "#333",
+                          }}
+                        >
+                          ${item.price}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            fontWeight: "bolder",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => dispatch(removeFromCart(item))}
+                        >
+                          <AiOutlineClose />
+                        </Typography>
+                      </Box>
+                    ))}
                 </Box>
               </Box>
             </Drawer>
