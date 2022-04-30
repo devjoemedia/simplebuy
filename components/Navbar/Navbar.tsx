@@ -34,7 +34,9 @@ const pages = [
 ];
 
 const Navbar = () => {
-  const cartTotal = useSelector((state: RootState) => state.cart.cartTotal);
+  const { cartTotal, cartCount } = useSelector(
+    (state: RootState) => state.cart
+  );
   const cartItems = useSelector((state: RootState) => state.cart.items);
 
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
@@ -195,7 +197,7 @@ const Navbar = () => {
                     textAlign: "center",
                   }}
                 >
-                  {cartTotal | 0}
+                  {cartCount | 0}
                 </Typography>
               </Box>
               <Typography marginLeft={"10px"}>Cart</Typography>
@@ -243,39 +245,46 @@ const Navbar = () => {
             >
               <Box
                 sx={{
-                  height: "100%",
-                  padding: 1,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  color: "#333",
+                  borderBottom: "1px solid #f1f1f1",
+                  padding: "15px",
+                  position: "absolute",
+                  top: "0",
+                  width: "100%",
+                  bgcolor: "#fff",
+                  zIndex: 99,
                 }}
               >
-                <Box
+                <Typography
                   sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    color: "#333",
-                    borderBottom: "1px solid #f1f1f1",
-                    padding: "10px 0",
+                    fontWeight: "bolder",
+                    cursor: "pointer",
+                  }}
+                  onClick={ToggleCartMenu}
+                >
+                  <AiOutlineClose />
+                </Typography>
+
+                <Typography
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#0f5751",
                   }}
                 >
-                  <Typography
-                    sx={{
-                      fontWeight: "bolder",
-                      cursor: "pointer",
-                    }}
-                    onClick={ToggleCartMenu}
-                  >
-                    <AiOutlineClose />
-                  </Typography>
+                  SimpleBuy
+                </Typography>
+              </Box>
 
-                  <Typography
-                    sx={{
-                      fontWeight: "bold",
-                      color: "#0f5751",
-                    }}
-                  >
-                    SimpleBuy
-                  </Typography>
-                </Box>
-
+              <Box
+                sx={{
+                  padding: " 15px",
+                  paddingTop: "60px",
+                  height: "100%",
+                  overflowY: "scroll",
+                }}
+              >
                 <Box
                   sx={{
                     flexGrow: 1,
@@ -284,7 +293,6 @@ const Navbar = () => {
                     alignItems: "left",
                   }}
                 >
-                  ({cartItems.length}) items in cart
                   {/* Cart Item Row */}
                   {cartItems.length > 0 &&
                     cartItems.map((item) => (
@@ -361,6 +369,35 @@ const Navbar = () => {
                     ))}
                 </Box>
               </Box>
+              <Box
+                sx={{
+                  bottom: 0,
+                  position: "absolute",
+                  bgcolor: "#004c46",
+                  color: "#fff",
+                  // height: "50px",
+                  padding: "15px",
+                  margin: 0,
+                  minWidth: { xs: 280, sm: 380 },
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography>Cart Total: ${cartTotal.toFixed(2)}</Typography>
+                <Button
+                  sx={{
+                    bgcolor: "white",
+                    color: "#004c46",
+                    "&:hover": {
+                      bgcolor: "white",
+                      color: "#004c46",
+                    },
+                  }}
+                >
+                  Checkout
+                </Button>
+              </Box>
             </Drawer>
 
             {/* Nav Drawer */}
@@ -427,7 +464,9 @@ const Navbar = () => {
                         textAlign: "left",
                       }}
                     >
-                      {page}
+                      <Link href="/" passHref>
+                        {page}
+                      </Link>
                     </Button>
                   ))}
                 </Box>

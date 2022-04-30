@@ -7,22 +7,8 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { productInterface } from "lib/types";
-
-const baseUrl = "http://localhost:1337/api/products";
 
 export const fetchProducts = async () => {
-  // let products = await fetch(baseUrl + "?populate=imageUrl")
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     if (data.length) {
-  //       localStorage.setItem("products", JSON.stringify(data));
-  //     }
-  //     return data;
-  //   });
-
-  // return products;
-
   const q = query(collection(firebaseDB, "products"));
 
   const querySnapshot = await getDocs(q);
@@ -34,7 +20,7 @@ export const fetchProducts = async () => {
   return products;
 };
 
-export const fetchProduct = async (id: any) => {
+export const fetchProduct = async (id: string) => {
   const docRef = doc(firebaseDB, "products", id);
   const docSnap = await getDoc(docRef);
 
