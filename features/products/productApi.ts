@@ -34,7 +34,7 @@ export const fetchProducts = async () => {
   return products;
 };
 
-export const fetchProduct = async (id: string) => {
+export const fetchProduct = async (id: any) => {
   const docRef = doc(firebaseDB, "products", id);
   const docSnap = await getDoc(docRef);
 

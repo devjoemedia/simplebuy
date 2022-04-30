@@ -44,7 +44,7 @@ const ProductDetails = (props: productInt) => {
   }, [dispatch, id]);
 
   const handleAddToCart = () => {
-    dispatch(addCartItem(product));
+    dispatch(addToCart(product));
   };
 
   return (
