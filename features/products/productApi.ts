@@ -14,7 +14,7 @@ export const fetchProducts = async () => {
   const querySnapshot = await getDocs(q);
   let products: any = [];
   querySnapshot.forEach((doc) => {
-    products.push({ id: doc.id, ...doc.data() });
+    products.push({ id: doc.id, quantity: 1, ...doc.data() });
   });
 
   return products;
@@ -26,7 +26,7 @@ export const fetchProduct = async (id: string) => {
 
   if (docSnap.exists()) {
     let product = docSnap.data();
-    return { ...product, id: docSnap.id };
+    return { ...product, quantity: 1, id: docSnap.id };
   } else {
     return "Document not found!";
   }

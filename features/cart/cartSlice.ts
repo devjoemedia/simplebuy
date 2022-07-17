@@ -1,9 +1,4 @@
-import {
-  createSlice,
-  PayloadAction,
-  createAsyncThunk,
-  current,
-} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { productInterface } from "lib/types";
 
 interface CartState {
@@ -23,10 +18,6 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      // let arr = current(state).items;
-
-      // if (arr.length == 0) state.items.push(action.payload);
-
       if (state.items.length == 0) state.items.push(action.payload);
       else {
         let exist = false;
@@ -39,7 +30,10 @@ export const cartSlice = createSlice({
       }
 
       state.cartCount = state.items.length;
-      state.cartTotal = state.items.reduce((sum, item) => sum + item.price, 0);
+      state.cartTotal = state.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
     },
     removeFromCart: (state, action) => {
       state.items = state.items.filter(
@@ -47,16 +41,47 @@ export const cartSlice = createSlice({
       );
 
       state.cartCount = state.items.length;
-      state.cartTotal = state.items.reduce((sum, item) => sum + item.price, 0);
+      state.cartTotal = state.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
     },
     clearCart: (state) => {
       state.items = [];
       state.cartTotal = 0;
       state.cartCount = 0;
     },
+    increaseItemQuantity: (state, action) => {
+      //
+      state.items.forEach((item) => {
+        if (item.id === action.payload) item.quantity += 1;
+        state.cartTotal = state.items.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+      });
+    },
+    decreaseItemQuantity: (state, action) => {
+      //
+      state.items.map((item) => {
+        if (item.quantity > 1) {
+          if (item.id === action.payload) item.quantity -= 1;
+          state.cartTotal = state.items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
+        }
+      });
+    },
   },
 });
 
-export const { addToCart, removeFromCart, clearCart } = cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  clearCart,
+  increaseItemQuantity,
+  decreaseItemQuantity,
+} = cartSlice.actions;
 
 export default cartSlice.reducer;

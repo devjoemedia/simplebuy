@@ -13,6 +13,7 @@ export interface productInterface {
   slug: string;
   description: string;
   id: string;
+  quantity: number;
 }
 
 export interface userInterface {

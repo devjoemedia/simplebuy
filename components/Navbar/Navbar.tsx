@@ -18,7 +18,13 @@ import { AiOutlineShoppingCart, AiOutlineClose } from "react-icons/ai";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "app/store";
-import { removeFromCart } from "features/cart/cartSlice";
+import {
+  decreaseItemQuantity,
+  increaseItemQuantity,
+  removeFromCart,
+} from "features/cart/cartSlice";
+import { PaystackButton } from "react-paystack";
+import { productInterface } from "lib/types";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const pages = [
@@ -34,10 +40,13 @@ const pages = [
 ];
 
 const Navbar = () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<productInterface[]>([]);
   const { cartTotal, cartCount } = useSelector(
     (state: RootState) => state.cart
   );
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const products = useSelector((state: RootState) => state.products.products);
 
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
   const [openCart, setOpenCart] = useState<boolean>(false);
@@ -60,6 +69,45 @@ const Navbar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleSearch = async (e: any) => {
+    e.preventDefault();
+    setSearchQuery(e.target.value);
+
+    const data = products.filter((product) => {
+      if (e.target.value.length > 2) {
+        if (
+          product.name
+            .toLocaleLowerCase()
+            .includes(e.target.value.toLocaleLowerCase()) ||
+          product.description
+            .toLocaleLowerCase()
+            .includes(e.target.value.toLocaleLowerCase())
+        )
+          return product;
+      } else {
+        setSuggestions([]);
+      }
+    });
+
+    console.log(data);
+    setSuggestions(data);
+  };
+
+  const componentProps = {
+    email: "joenart2@gmail.com",
+    amount: 100,
+    metaData: {
+      name: "Simplebuy",
+      phone: "+233540539205",
+    },
+    currency: "GHS",
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+    text: "Pay Now",
+    onSuccess: () =>
+      alert("Thanks for doing business with us! Come back soon!!"),
+    onClose: () => alert("Wait! You need this oil, don't go!!!!"),
   };
 
   return (
@@ -106,42 +154,77 @@ const Navbar = () => {
               margin: "auto",
             }}
           >
-            <Box
-              sx={{
-                maxWidth: "100%",
-                width: "500px",
-                margin: "auto",
-                border: "1.5px solid #ccc",
-                borderRadius: "3.5px",
-                display: "flex",
-                alignItems: "center",
-                padding: "0 20px",
-              }}
-            >
-              <BiSearch style={{ fontSize: "20px" }} />
-              <input
-                style={{
-                  width: "100%",
-                  outline: "none",
-                  padding: "10px",
-                  border: "none",
+            <form onSubmit={handleSearch}>
+              <Box
+                sx={{
+                  maxWidth: "100%",
+                  width: "500px",
+                  margin: "auto",
+                  border: "1.5px solid #ccc",
+                  borderRadius: "3.5px",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0 20px",
+                  position: "relative",
                 }}
-              />
-            </Box>
-            <Button
-              sx={{
-                marginLeft: "10px",
-                paddingX: "20px",
-                bgcolor: "#0f5751",
-                color: "#fff",
-                "&:hover": {
-                  background: "#0f5751",
-                },
-              }}
-              variant="contained"
-            >
-              Search
-            </Button>
+              >
+                <BiSearch style={{ fontSize: "20px" }} />
+                <input
+                  style={{
+                    width: "100%",
+                    outline: "none",
+                    padding: "10px",
+                    border: "none",
+                  }}
+                  onChange={handleSearch}
+                />
+                {suggestions.length > 0 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      padding: "20px",
+                      width: "100%",
+                      background: "#fafafa",
+                      boxShadow: "0 0 10px rgba(0, 0, 0, 0.4)",
+                      left: "0",
+                    }}
+                  >
+                    {suggestions.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={"/products/" + item.id}
+                        passHref
+                      >
+                        <p
+                          onClick={() => setSuggestions([])}
+                          style={{ marginBottom: 10 }}
+                        >
+                          {item.name}
+                        </p>
+                      </Link>
+                    ))}
+                    {/* Test */}
+                  </div>
+                )}
+              </Box>
+              {/* <Button
+                sx={{
+                  marginLeft: "10px",
+                  paddingX: "20px",
+                  bgcolor: "#0f5751",
+                  color: "#fff",
+                  "&:hover": {
+                    background: "#0f5751",
+                  },
+                }}
+                variant="contained"
+                type="submit"
+                // onClick={() => handleSearch(searchQuery)}
+              >
+                Search
+              </Button> */}
+            </form>
           </Box>
 
           <Box
@@ -321,7 +404,11 @@ const Navbar = () => {
                               fontSize: "12px",
                               textAlign: "center",
                               marginRight: "10px",
+                              cursor: "pointer",
                             }}
+                            onClick={() =>
+                              dispatch(decreaseItemQuantity(item.id))
+                            }
                           >
                             -
                           </Typography>
@@ -331,7 +418,7 @@ const Navbar = () => {
                               color: "#333",
                             }}
                           >
-                            1
+                            {item.quantity}
                           </Typography>
                           <Typography
                             bgcolor="#004c46"
@@ -343,7 +430,11 @@ const Navbar = () => {
                               fontSize: "12px",
                               textAlign: "center",
                               marginLeft: "10px",
+                              cursor: "pointer",
                             }}
+                            onClick={() =>
+                              dispatch(increaseItemQuantity(item.id))
+                            }
                           >
                             +
                           </Typography>
@@ -354,7 +445,7 @@ const Navbar = () => {
                             color: "#333",
                           }}
                         >
-                          ${item.price}
+                          ${item.price * item.quantity}
                         </Typography>
                         <Typography
                           sx={{
@@ -385,7 +476,7 @@ const Navbar = () => {
                 }}
               >
                 <Typography>Cart Total: ${cartTotal.toFixed(2)}</Typography>
-                <Button
+                {/* <Button
                   sx={{
                     bgcolor: "white",
                     color: "#004c46",
@@ -396,7 +487,8 @@ const Navbar = () => {
                   }}
                 >
                   Checkout
-                </Button>
+                </Button> */}
+                <PaystackButton {...componentProps} />
               </Box>
             </Drawer>
 

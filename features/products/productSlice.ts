@@ -5,6 +5,7 @@ import { fetchProduct, fetchProducts } from "./productApi";
 interface ProductState {
   products: productInterface[];
   product: any;
+  quantity: number;
   isLoading: boolean;
   isError: boolean;
   message: string;
@@ -13,6 +14,7 @@ interface ProductState {
 const initialState: ProductState = {
   products: [],
   product: null,
+  quantity: 0,
   isLoading: false,
   isError: false,
   message: "",
