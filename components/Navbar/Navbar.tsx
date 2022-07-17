@@ -102,8 +102,8 @@ const Navbar = () => {
       name: "Simplebuy",
       phone: "+233540539205",
     },
-    currency: "GHS",
-    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+    // currency: "GHS",
+    publicKey: "process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY",
     text: "Pay Now",
     onSuccess: () =>
       alert("Thanks for doing business with us! Come back soon!!"),
