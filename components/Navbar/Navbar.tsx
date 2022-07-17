@@ -97,7 +97,7 @@ const Navbar = () => {
 
   const componentProps = {
     email: "joenart2@gmail.com",
-    amount: 100,
+    amount: 100 * 50,
     metaData: {
       name: "Simplebuy",
       phone: "+233540539205",
